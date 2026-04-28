@@ -1,302 +1,155 @@
-#include  <iostream>
-using namespace std;
+#pragma once
 
+namespace DataStructures {
 
+/**
+ * @file SingleLinkedList.h
+ * @brief Header file for a singly linked list implementation.
+ */
+
+/**
+ * @brief A node in the singly linked list.
+ * 
+ * @tparam T The type of data stored in the node.
+ */
 template <typename T>
-class SNode{
-    public:
-        T data;
-        SNode<T> * next;
-};
-
-template <typename T>
-class SingleLinkedList
-{
-private:
-    SNode<T> *head;
-    int length;
-    
+class SNode {
 public:
-    
-    SingleLinkedList<T>();
-    ~SingleLinkedList<T>();
-    void print();
-    void insertFront(T data);
-    void insertEnd(T data);
-    void insert(T data,int position=0);
-    void deleteFront();
-    void deleteEnd();
-    void deleteByValue(T data);
-    void deleteByPosition(int position);
-    int size();
+    T data;           /**< The data stored in the node. */
+    SNode<T>* next;   /**< Pointer to the next node in the list. */
 
-
+    /**
+     * @brief Constructs a new SNode.
+     * 
+     * @param data The data to store in the node. Defaults to 0.
+     */
+    SNode(T data = 0) : data(data), next(nullptr) {}
 };
 
-
-
+/**
+ * @brief A singly linked list container.
+ * 
+ * Provides basic operations for manipulating a singly linked list,
+ * including insertion, deletion, and access operations.
+ * 
+ * @tparam T The type of elements stored in the list.
+ */
 template <typename T>
-int SingleLinkedList<T>::size(){
-    return length;
-}
+class SingleLinkedList {
+private:
+    SNode<T>* head;   /**< Pointer to the first node in the list. */
+    int length;       /**< Current number of nodes in the list. */
 
-template <typename T>
-SingleLinkedList<T>::SingleLinkedList(){
-    head = nullptr;
-    length=0;
-}
+public:
+    /**
+     * @brief Constructs an empty singly linked list.
+     */
+    SingleLinkedList<T>();
 
-template <typename T>
-void SingleLinkedList<T>::insertFront(T data){
-    
-    SNode<T>* newSNode = new SNode<T>();
-    newSNode->data = data;
-    newSNode->next = head;
-    head = newSNode;
-    length++;
-}   
+    /**
+     * @brief Destroys the list and releases all allocated memory.
+     */
+    ~SingleLinkedList<T>();
 
+    /**
+     * @brief Prints all elements in the list.
+     */
+    void print();
 
-template <typename T>
-void SingleLinkedList<T>::insert(T data ,int position){
-    try{
-            if(position <0 ||position>length){
-                throw invalid_argument("invalid position");
-            } 
+    /**
+     * @brief Inserts a new element at the front of the list.
+     * 
+     * @param data The element to insert.
+     * 
+     * @complexity O(1)
+     */
+    void insertFront(T data);
 
+    /**
+     * @brief Inserts a new element at the end of the list.
+     * 
+     * @param data The element to insert.
+     * 
+     * @complexity O(n) where n is the number of elements.
+     */
+    void insertEnd(T data);
 
+    /**
+     * @brief Inserts a new element at the specified position.
+     * 
+     * @param data The element to insert.
+     * @param position The index at which to insert (0-based). Defaults to 0.
+     * 
+     * @pre 0 <= position <= size()
+     * @complexity O(n) where n is the number of elements.
+     */
+    void insert(T data, int position = 0);
 
-            if (position == 0) {
-                insertFront(data);
-                return;
-            }
-            if(position==length){
-                insertEnd(data);
-                return;
-            }
+    /**
+     * @brief Removes the first element from the list.
+     * 
+     * @pre The list must not be empty.
+     * @complexity O(1)
+     */
+    void deleteFront();
 
-            SNode<T> * newSNode = new SNode<T>();
-            newSNode->data = data;
+    /**
+     * @brief Removes the last element from the list.
+     * 
+     * @pre The list must not be empty.
+     * @complexity O(n) where n is the number of elements.
+     */
+    void deleteEnd();
 
-            
-            SNode<T> * temp= head;
-            for(int i=0;i<position-1;i++){
-                temp=temp->next;
-            }
-            newSNode->next= temp->next;
-            temp->next= newSNode;
-            length++;
+    /**
+     * @brief Removes the first occurrence of a specific value from the list.
+     * 
+     * @param data The value to remove.
+     * 
+     * @complexity O(n) where n is the number of elements.
+     */
+    void deleteByValue(T data);
 
-            
-        }
-        catch(exception & e){
-            cout << e.what();
-        }
-    
-}
+    /**
+     * @brief Removes the element at the specified position.
+     * 
+     * @param position The index of the element to remove (0-based).
+     * 
+     * @pre 0 <= position < size()
+     * @complexity O(n) where n is the number of elements.
+     */
+    void deleteByPosition(int position);
 
+    /**
+     * @brief Checks if the list is empty.
+     * 
+     * @return true If the list contains no nodes.
+     * @return false If the list contains at least one node.
+     * 
+     * @complexity O(1)
+     */
+    bool isEmpty();
 
-template <typename T>
-void SingleLinkedList<T>::insertEnd(T data){
-    
+    /**
+     * @brief Returns the first element without removing it.
+     * 
+     * @return T A copy of the element at the head of the list.
+     * 
+     * @pre The list must not be empty.
+     * @complexity O(1)
+     */
+    T front() const;
 
-    SNode<T> * newSNode = new SNode<T>();
-    newSNode->data= data;
-    newSNode->next = nullptr;
+    /**
+     * @brief Returns the current number of elements in the list.
+     * 
+     * @return int The size of the list.
+     * 
+     * @complexity O(1)
+     */
+    int size();
+};
 
-    // case of empty linked list
-    if(head==nullptr){
-        head= newSNode;
-        length++;
-        return;
-    }
+#include "SingleLinkedList.tpp"
 
-    // case of no empty LL
-    SNode<T> * temp = head;
-
-    while(temp->next != nullptr){
-        temp=temp->next;
-    }
-
-    temp->next = newSNode;
-    length++;
-
-    
-
-}
-
-
-
-template <typename T>
-void SingleLinkedList<T>::deleteFront(){
-    try{
-        if(length==0) throw invalid_argument("list is empty");
-
-        SNode<T>* temp = head;
-
-        head=head->next;
-        
-        delete temp;
-
-        length--;
-    }catch(exception &e){
-        cout << e.what();
-    }
-}
-
-
-template <typename T>
-void SingleLinkedList<T>::deleteEnd(){
-    try{
-         if(head == nullptr){
-            cout << "list is empty" << endl;
-            return;
-         }
-
-        SNode<T> *temp = head;
-        
-
-        if(length==1){
-            delete head;
-            head= nullptr;
-            length--;
-            return;
-        }
-
-        SNode<T> *prev = nullptr;
-        while(temp ->next!= nullptr){
-            prev = temp;
-            temp = temp->next;
-        }
-
-        prev->next = nullptr;
-        delete temp;
-        length--;
-
-        
-
-    }catch(exception &e){
-        cout << e.what() << endl;
-    }
-
-}
-
-
-template <typename T>
-void SingleLinkedList<T>::deleteByValue(T data){
-    try{
-        if(head == nullptr){
-            throw invalid_argument("list is empty");
-            return;
-        }
-
-
-        if(head->data== data){
-            SNode<T> *temp = head;
-            head = head->next;
-            delete temp;
-            length--;
-            return;
-        }
-
-
-        
-        SNode<T>*prev = head;
-        SNode<T>* temp = head->next;
-
-        while(temp != nullptr &&temp->data != data){
-            prev= temp;
-            temp= temp->next;
-        }
-
-        if(temp == nullptr){
-            cout << -1 ;
-            return ;
-        }
-
-        prev->next= temp->next;
-        delete temp;
-        length--;
-
-    }catch(exception &e){
-        cout << e.what() << endl;
-    }
-}
-
-
-template <typename T>
-void SingleLinkedList<T>::deleteByPosition(int position){
-
-    try{
-        if(position <0 || position >= length){
-            throw invalid_argument("invalid position");
-        }
-
-        if(head==nullptr){
-            cout << "Empty List" << endl;
-            return;
-        }
-
-        if(position==0){
-            deleteFront();
-            return ;
-        } 
-
-        if(position==length-1 & length-1 !=0){
-            deleteEnd();
-            return;
-        }
-
-        SNode<T>* temp = head;
-        SNode<T>* prev = temp;
-
-        for(int i=0;i<position;i++){
-            prev= temp;
-            temp=temp->next;
-        }
-
-        prev->next = temp->next;
-        delete temp;
-    }
-    catch(exception &e ){
-        cout << e.what(); 
-    }
-
-}
-
-
-
-
-template <typename T>
-void SingleLinkedList<T>::print(){
-    try{
-        if(head==nullptr) {
-            cout << "empty list " << endl;
-            return;
-        }
-
-        SNode<T> *temp = head;
-        while(temp != nullptr){
-            cout << temp->data << " ";
-            temp= temp->next;
-        }
-        cout << endl;
-    }catch(exception &e){
-        cout << e.what() << endl;
-    }
-    
-
-}
-
-
-
-template <typename T>
-SingleLinkedList<T>::~SingleLinkedList(){
-    SNode<T>* temp = head;
-    while (temp != nullptr) {
-        SNode<T>* next = temp->next;
-        delete temp;
-        temp = next;
-    }
-   
-}
+} // namespace DataStructures
